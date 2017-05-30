@@ -1,0 +1,165 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Vert.x Circuit Breaker Booster</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+</head>
+
+<body>
+
+<div class="container">
+
+    <div>
+        <h1>Vert.x Circuit Breaker Booster</h1>
+        <p class="lead">
+            Cloud applications are often comprised of many services. And between those services there often can be many interactions.
+            But even if some of those services fail or are unavailable, we may want to offer an alternative response to an error condition,
+            that it does not increase load on service in, which is unavailable because of high load. And to achieve this, we need a generic
+            mechanism over the failed or unavailable service to service communication, which can quickly and easily determine that the services
+            are not functioning properly, hence can either return a default result or fail quickly and gracefully with enough information about
+            the current failure. This mechanism is called circuit breaker.
+            <br/>
+            On this page you can invoke the <code>greeting service</code>. This service uses a <code>name
+            service</code>. The invocations are protected by a circuit breaker. You can configure the state of the
+            <code>name service</code> using the <code>toggle</code> button.
+        </p>
+
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Invoke the greeting service:</h2>
+            <button id="invoke" type="submit" class="btn btn-success">Invoke</button>
+        </div>
+        <div class="col-md-6">
+            <h2>Result:</h2>
+            <pre><code id="greeting-result">Invoke the service to see the result.</code></pre>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Name service state:</h2>
+            <p id="name-state"></p>
+            <button id="toggle" type="submit" class="btn btn-primary">Toggle</button>
+        </div>
+        <div class="col-md-6">
+            <h2>Circuit breaker state</h2>
+            <p id="circuit-state"></p>
+        </div>
+    </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
+<script src="libs/sockjs.min.js"></script>
+<script src='libs/vertx-eventbus.js'></script>
+
+<script>
+    function invokeService() {
+        $.getJSON("/api/greeting", function (res) {
+            $("#greeting-result").html(JSON.stringify(res));
+        });
+    }
+
+    function initNameServiceState() {
+        var url = window.location.origin.replace("greeting-service", "name-service") + "/api/state";
+        $.ajax({
+            url: url,
+            type: "GET",
+            crossDomain: true,
+            dataType: "json",
+            success: function (response) {
+                var state = response["state"];
+                updateNameServiceState(state);
+            },
+            error: function (xhr, status) {
+                $("#name-state").html("<strong class='bg-danger'>unable to retrieve the state</strong>");
+            }
+        });
+
+        $.getJSON("", function (res) {
+            $("#greeting-result").html(JSON.stringify(res));
+        });
+    }
+
+    function updateNameServiceState(state) {
+        if (state === "ok") {
+            $("#name-state").html("<h4><span id='svc-state' class='label label-success'>working state</span></h4>");
+        } else {
+            $("#name-state").html("<h4><span id='svc-state' class='label label-warning'>failure state</span></h4>");
+        }
+    }
+
+    function updateCircuitBreakerState(state) {
+        if (state === "OPEN") {
+            $("#circuit-state").html("<h4><span id='svc-state' class='label label-danger'>OPEN</span></h4>");
+        } else if (state == "CLOSED") {
+            $("#circuit-state").html("<h4><span id='svc-state' class='label label-success'>CLOSED</span></h4>");
+        } else {
+            $("#circuit-state").html("<h4><span id='svc-state' class='label label-warning'>HALF OPEN</span></h4>");
+        }
+    }
+
+
+    function toggleNameServiceState() {
+        var url = window.location.origin.replace("greeting-service", "name-service") + "/api/state";
+        var newState = "ok";
+        if ($("#svc-state").hasClass("label-success")) {
+            newState = "fail";
+        }
+        $.ajax({
+            url: url,
+            type: "PUT",
+            crossDomain: true,
+            data: JSON.stringify({ state: newState}),
+            dataType: "json",
+            success: function (response) {
+                var state = response["state"];
+                updateNameServiceState(state);
+            },
+            error: function (xhr, status) {
+                $("#name-state").html("<strong class='label label-danger'>unable to retrieve the state</strong>");
+            }
+        });
+
+        $.getJSON("", function (res) {
+            $("#greeting-result").html(JSON.stringify(res));
+        });
+    }
+    
+    $(document).ready(function () {
+        $("#invoke").click(function (e) {
+            invokeService();
+            e.preventDefault();
+        });
+
+        $("#toggle").click(function (e) {
+            toggleNameServiceState();
+            e.preventDefault();
+        });
+
+        initNameServiceState();
+
+        var eb = new EventBus('/eventbus');
+        eb.onopen = function () {
+            console.log("Event bus opened");
+            eb.registerHandler('circuit-breaker', function (error,  msg) {
+                var state = msg.body.state;
+                updateCircuitBreakerState(state);
+            });
+        };
+
+    });
+
+    var foo;
+</script>
+
+</body>
+
+</html>
