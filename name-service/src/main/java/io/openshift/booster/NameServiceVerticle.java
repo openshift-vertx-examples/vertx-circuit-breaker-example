@@ -1,5 +1,8 @@
 package io.openshift.booster;
 
+import static io.netty.handler.codec.http.HttpHeaderValues.APPLICATION_JSON;
+import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
+
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.http.HttpMethod;
 import io.vertx.core.json.JsonObject;
@@ -7,12 +10,10 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 import io.vertx.ext.web.handler.CorsHandler;
 
-import static io.netty.handler.codec.http.HttpHeaderValues.APPLICATION_JSON;
-import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
-
 
 public class NameServiceVerticle extends AbstractVerticle {
 
+    public static final String NAME = "World";
     /**
      * Current state, possible value: "fail", "ok".
      */
@@ -20,7 +21,6 @@ public class NameServiceVerticle extends AbstractVerticle {
 
     @Override
     public void start() throws Exception {
-        String name = config().getString("name", System.getenv("HOSTNAME"));
 
         Router router = Router.router(vertx);
 
@@ -46,7 +46,7 @@ public class NameServiceVerticle extends AbstractVerticle {
                 case "ok":
                     rc.response()
                         .putHeader(CONTENT_TYPE, APPLICATION_JSON)
-                        .end(new JsonObject().put("name", name).encode());
+                            .end(new JsonObject().put("name", NAME).encode());
                     break;
                 default:
                     rc.fail(new Exception("Name Service Down"));

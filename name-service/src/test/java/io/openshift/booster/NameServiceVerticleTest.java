@@ -1,20 +1,21 @@
 package io.openshift.booster;
 
-import io.restassured.RestAssured;
-import io.vertx.core.DeploymentOptions;
-import io.vertx.core.Vertx;
-import io.vertx.core.json.JsonObject;
+import static org.hamcrest.Matchers.is;
+
+import static com.jayway.awaitility.Awaitility.await;
+
+import static io.restassured.RestAssured.get;
+import static io.restassured.RestAssured.given;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicReference;
 
-import static com.jayway.awaitility.Awaitility.await;
-import static io.restassured.RestAssured.get;
-import static io.restassured.RestAssured.given;
-import static org.hamcrest.Matchers.is;
+import io.restassured.RestAssured;
+import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonObject;
 
 /**
  * @author <a href="http://escoffier.me">Clement Escoffier</a>
@@ -27,8 +28,7 @@ public class NameServiceVerticleTest {
     @Before
     public void setUp() {
         vertx = Vertx.vertx();
-        vertx.deployVerticle(NameServiceVerticle.class.getName(),
-            new DeploymentOptions().setConfig(new JsonObject().put("name", "vert.x")));
+        vertx.deployVerticle(NameServiceVerticle.class.getName());
 
         RestAssured.baseURI = "http://localhost:8080";
 
@@ -55,7 +55,7 @@ public class NameServiceVerticleTest {
 
     @Test
     public void testNameWhenOk() {
-        get("/api/name").then().statusCode(200).body("name", is("vert.x"));
+        get("/api/name").then().statusCode(200).body("name", is(NameServiceVerticle.NAME));
     }
 
     @Test
@@ -81,7 +81,7 @@ public class NameServiceVerticleTest {
             .body("state", is("ok"));
 
         get("/api/state").then().statusCode(200).body("state", is("ok"));
-        get("/api/name").then().statusCode(200).body("name", is("vert.x"));
+        get("/api/name").then().statusCode(200).body("name", is(NameServiceVerticle.NAME));
     }
 
 
