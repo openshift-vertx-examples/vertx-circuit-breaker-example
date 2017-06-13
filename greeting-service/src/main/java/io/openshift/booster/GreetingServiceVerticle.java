@@ -1,5 +1,8 @@
 package io.openshift.booster;
 
+import static io.netty.handler.codec.http.HttpHeaderValues.APPLICATION_JSON;
+import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;
+
 import io.vertx.circuitbreaker.CircuitBreakerOptions;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
@@ -14,8 +17,6 @@ import io.vertx.rxjava.ext.web.client.HttpResponse;
 import io.vertx.rxjava.ext.web.client.WebClient;
 import io.vertx.rxjava.ext.web.handler.StaticHandler;
 import io.vertx.rxjava.ext.web.handler.sockjs.SockJSHandler;
-
-import static io.netty.handler.codec.http.HttpHeaders.Values.APPLICATION_JSON;
 
 public class GreetingServiceVerticle extends AbstractVerticle {
 
@@ -44,7 +45,7 @@ public class GreetingServiceVerticle extends AbstractVerticle {
 
         router.get("/api/greeting").handler(this::greeting);
         router.get("/api/cb-state").handler(
-            rc -> rc.response().end(new JsonObject().put("state", circuit.state()).encode()));
+                rc -> rc.response().putHeader(CONTENT_TYPE.toString(), APPLICATION_JSON.toString()).end(new JsonObject().put("state", circuit.state()).encodePrettily()));
         router.get("/*").handler(StaticHandler.create());
 
         vertx.createHttpServer()
@@ -73,7 +74,7 @@ public class GreetingServiceVerticle extends AbstractVerticle {
                     JsonObject response = new JsonObject()
                         .put("content", String.format(template, name));
                     rc.response()
-                        .putHeader("content-type", APPLICATION_JSON)
+                            .putHeader(CONTENT_TYPE.toString(), APPLICATION_JSON.toString())
                         .end(response.encode());
                 }
             );
