@@ -19,8 +19,8 @@
   <packaging>pom</packaging>
 
   <properties>
-    <vertx.version>3.4.1</vertx.version>
-    <vertx-maven-plugin.version>1.0.7</vertx-maven-plugin.version>
+    <vertx.version>3.4.2</vertx.version>
+    <vertx-maven-plugin.version>1.0.8</vertx-maven-plugin.version>
     <fabric8-maven-plugin.version>3.2.28</fabric8-maven-plugin.version>
     <!--Skips execution of FMP for this project and all children projects, which does not override this variable-->
     <docker.skip>true</docker.skip>
