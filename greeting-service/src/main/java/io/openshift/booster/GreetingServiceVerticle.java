@@ -37,7 +37,9 @@ public class GreetingServiceVerticle extends AbstractVerticle {
                 .setTimeout(1000)
         );
 
-        client = WebClient.create(vertx, new WebClientOptions().setDefaultHost("name-service"));
+        client = WebClient.create(vertx, new WebClientOptions()
+            .setDefaultHost("name-service")
+            .setDefaultPort(8080));
 
         Router router = Router.router(vertx);
 
@@ -71,6 +73,7 @@ public class GreetingServiceVerticle extends AbstractVerticle {
                         future::fail
                     ),
             error -> {
+                System.out.println("Fallback called for " + error.getMessage());
                 error.printStackTrace();
                 return "Fallback";
             }
