@@ -20,7 +20,7 @@
 
   <properties>
     <vertx.version>3.4.2</vertx.version>
-    <vertx-maven-plugin.version>1.0.8</vertx-maven-plugin.version>
+    <vertx-maven-plugin.version>1.0.9</vertx-maven-plugin.version>
     <!--Skips execution of FMP for this project and all children projects, which does not override this variable-->
     <docker.skip>true</docker.skip>
   </properties>
@@ -81,5 +81,13 @@
     </dependency>
   </dependencies>
 
-
+  <profiles>
+    <profile>
+      <id>redhat</id>
+      <properties>
+        <vertx.version>3.4.2.redhat-3</vertx.version>
+      </properties>
+    </profile>
+  </profiles>
+  
 </project>
