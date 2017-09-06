@@ -45,14 +45,6 @@
       <groupId>io.vertx</groupId>
       <artifactId>vertx-rx-java</artifactId>
     </dependency>
-
-    <dependency>
-      <!-- for ordering purpose only -->
-      <groupId>${project.groupId}</groupId>
-      <artifactId>name-service</artifactId>
-      <version>${project.version}</version>
-      <scope>runtime</scope>
-    </dependency>
   </dependencies>
 
 
