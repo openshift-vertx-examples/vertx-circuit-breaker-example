@@ -83,14 +83,10 @@ objects:
   kind: Service
   metadata:
     annotations:
-      fabric8.io/scm-con-url: scm:git:https://github.com/openshiftio/booster-parent.git/circuit-breaker-vertx/name-service
-      prometheus.io/port: "9779"
-      fabric8.io/scm-url: https://github.com/openshiftio/circuit-breaker-vertx/name-service
       fabric8.io/iconUrl: img/icons/vertx.svg
       fabric8.io/git-branch: master
       prometheus.io/scrape: "true"
-      fabric8.io/scm-devcon-url: scm:git:git:@github.com:openshiftio/booster-parent.git/circuit-breaker-vertx/name-service
-      fabric8.io/scm-tag: booster-parent-9
+      prometheus.io/port: "9779"
     labels:
       expose: "true"
       app: name-service
@@ -112,13 +108,9 @@ objects:
   kind: DeploymentConfig
   metadata:
     annotations:
-      fabric8.io/metrics-path: dashboard/file/kubernetes-pods.json/?var-project=name-service&var-version=6-SNAPSHOT
-      fabric8.io/scm-con-url: scm:git:https://github.com/openshiftio/booster-parent.git/circuit-breaker-vertx/name-service
-      fabric8.io/scm-url: https://github.com/openshiftio/circuit-breaker-vertx/name-service
       fabric8.io/iconUrl: img/icons/vertx.svg
       fabric8.io/git-branch: master
-      fabric8.io/scm-devcon-url: scm:git:git:@github.com:openshiftio/booster-parent.git/circuit-breaker-vertx/name-service
-      fabric8.io/scm-tag: booster-parent-9
+      fabric8.io/metrics-path: dashboard/file/kubernetes-pods.json/?var-project=name-service&var-version=6-SNAPSHOT
     labels:
       app: name-service
       provider: fabric8
@@ -127,6 +119,7 @@ objects:
     name: name-service
   spec:
     replicas: 1
+    revisionHistoryLimit: 2
     selector:
       app: name-service
       provider: fabric8
@@ -138,13 +131,9 @@ objects:
     template:
       metadata:
         annotations:
-          fabric8.io/metrics-path: dashboard/file/kubernetes-pods.json/?var-project=name-service&var-version=6-SNAPSHOT
-          fabric8.io/scm-con-url: scm:git:https://github.com/openshiftio/booster-parent.git/circuit-breaker-vertx/name-service
-          fabric8.io/scm-url: https://github.com/openshiftio/circuit-breaker-vertx/name-service
           fabric8.io/iconUrl: img/icons/vertx.svg
           fabric8.io/git-branch: master
-          fabric8.io/scm-devcon-url: scm:git:git:@github.com:openshiftio/booster-parent.git/circuit-breaker-vertx/name-service
-          fabric8.io/scm-tag: booster-parent-9
+          fabric8.io/metrics-path: dashboard/file/kubernetes-pods.json/?var-project=name-service&var-version=6-SNAPSHOT
         labels:
           app: name-service
           provider: fabric8
@@ -157,10 +146,6 @@ objects:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
-          - name: JAVA_APP_DIR
-            value: /deployments
-          - name: JAVA_OPTIONS
-            value: -Dvertx.cacheDirBase=/tmp
           image: name-service:latest
           imagePullPolicy: IfNotPresent
           livenessProbe:

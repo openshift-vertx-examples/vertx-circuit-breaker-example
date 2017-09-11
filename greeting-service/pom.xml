@@ -89,6 +89,9 @@
             </executions>
             <configuration>
               <enricher>
+                <excludes>
+                  <exclude>f8-maven-scm</exclude>
+                </excludes>
                 <config>
                   <vertx-health-check>
                     <path>/health</path>
