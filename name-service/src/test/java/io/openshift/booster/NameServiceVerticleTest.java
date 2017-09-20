@@ -3,6 +3,7 @@ package io.openshift.booster;
 import static org.hamcrest.Matchers.is;
 
 import static com.jayway.awaitility.Awaitility.await;
+import static com.jayway.awaitility.Awaitility.setDefaultTimeout;
 
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
@@ -11,6 +12,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import io.restassured.RestAssured;
@@ -31,6 +33,7 @@ public class NameServiceVerticleTest {
         vertx.deployVerticle(NameServiceVerticle.class.getName());
 
         RestAssured.baseURI = "http://localhost:8080";
+        setDefaultTimeout(1, TimeUnit.MINUTES);
 
         await().until(() -> {
             try {
