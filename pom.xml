@@ -12,7 +12,7 @@
 
   <groupId>io.openshift.booster</groupId>
   <artifactId>circuit-breaker-vertx</artifactId>
-  <version>7</version>
+  <version>8-SNAPSHOT</version>
 
 
   <name>106 - Circuit Breaker Mission with Vert.x</name>
