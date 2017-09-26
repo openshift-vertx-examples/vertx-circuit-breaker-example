@@ -7,7 +7,7 @@
   <parent>
     <groupId>io.openshift.booster</groupId>
     <artifactId>circuit-breaker-vertx</artifactId>
-    <version>7-SNAPSHOT</version>
+    <version>7</version>
   </parent>
 
   <artifactId>greeting-service</artifactId>
