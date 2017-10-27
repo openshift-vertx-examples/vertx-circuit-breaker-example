@@ -18,39 +18,25 @@
 
 package io.openshift.booster;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.core.IsEqual.equalTo;
-
-import static com.jayway.awaitility.Awaitility.await;
-import static com.jayway.restassured.RestAssured.get;
-
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-
+import org.junit.runner.RunWith;
+import org.arquillian.cube.openshift.impl.enricher.RouteURL;
+import org.jboss.arquillian.junit.Arquillian;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.response.Response;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.List;
-import java.util.Optional;
+import java.net.URL;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
-
-import io.fabric8.kubernetes.api.model.HasMetadata;
-import io.fabric8.kubernetes.api.model.Pod;
-import io.fabric8.openshift.api.model.DeploymentConfig;
-import io.fabric8.openshift.api.model.Route;
-import io.openshift.booster.test.OpenShiftTestAssistant;
 import io.vertx.circuitbreaker.CircuitBreakerState;
 import io.vertx.core.json.JsonObject;
+
+import static org.hamcrest.core.IsEqual.equalTo;
+import static com.jayway.awaitility.Awaitility.await;
 
 /**
  * @author Martin Kouba
  * @author Slavomir Krupa
  */
+@RunWith(Arquillian.class)
 public class OpenShiftIT {
 
 	private static final String NAME_SERVICE_APP = "name-service";
@@ -61,44 +47,14 @@ public class OpenShiftIT {
 	private static final String HELLO_OK = "Hello, World!";
 	private static final String HELLO_FALLBACK = "Hello, Fallback!";
 
-	private static final long SLEEP_WINDOW = 5000l;
+	private static final long SLEEP_WINDOW = 5000L;
 	private static final long REQUEST_THRESHOLD = 3;
 
-	private static final OpenShiftTestAssistant OPENSHIFT = new OpenShiftTestAssistant();
+	@RouteURL(NAME_SERVICE_APP)
+	private URL nameServiceUrl;
 
-	private static String nameBaseUri;
-	private static String greetingBaseUri;
-
-	@BeforeClass
-	public static void setup() throws Exception {
-
-		nameBaseUri = deployApp(NAME_SERVICE_APP, System.getProperty("nameServiceTemplate"));
-		greetingBaseUri = deployApp(GREETING_SERVICE_APP, System.getProperty("greetingServiceTemplate"));
-
-		await().atMost(5, TimeUnit.MINUTES).until(() -> {
-			List<Pod> list = OPENSHIFT.client().pods().inNamespace(OPENSHIFT.project()).list().getItems();
-			return list.stream()
-					.filter(pod -> pod.getMetadata().getName().startsWith(NAME_SERVICE_APP) || pod.getMetadata().getName().startsWith(GREETING_SERVICE_APP))
-					.filter(pod -> "running".equalsIgnoreCase(pod.getStatus().getPhase())).collect(Collectors.toList()).size() >= 2;
-		});
-
-		System.out.println("Pods running, waiting for probes...");
-
-		await().pollInterval(1, TimeUnit.SECONDS).atMost(5, TimeUnit.MINUTES).catchUncaughtExceptions().until(() ->
-				get(greetingBaseUri + "/health").statusCode() == 200 && get(nameBaseUri + "/health").statusCode() == 200
-
-		);
-	}
-
-	@AfterClass
-	public static void teardown() throws Exception {
-		OPENSHIFT.cleanup();
-	}
-
-	@Before
-	public void assureServiceIsWorking() {
-		await().atMost(10, TimeUnit.SECONDS).until(() -> testGreeting(HELLO_OK));
-	}
+	@RouteURL(GREETING_SERVICE_APP)
+	private URL greetingServiceUrl;
 
 	@Test
 	public void testThatCircuitBreakerIsClosedByDefault() throws InterruptedException {
@@ -136,7 +92,7 @@ public class OpenShiftIT {
 	}
 
 	private Response greetingResponse() {
-		return RestAssured.when().get(greetingBaseUri + "/api/greeting");
+		return RestAssured.when().get(greetingServiceUrl.toExternalForm() + "api/greeting");
 	}
 
 	private void assertGreeting(String expected) {
@@ -151,7 +107,7 @@ public class OpenShiftIT {
 	}
 
 	private Response circuitBreakerResponse() {
-		return RestAssured.when().get(greetingBaseUri + "/api/cb-state");
+		return RestAssured.when().get(greetingServiceUrl.toExternalForm() + "api/cb-state");
 	}
 
 	private void assertCircuitBreaker(CircuitBreakerState expectedState) {
@@ -167,29 +123,7 @@ public class OpenShiftIT {
 
 	private void changeNameServiceState(String state) {
 		Response response = RestAssured.given().header("Content-type", "application/json")
-				.body(new JsonObject().put("state", state).encodePrettily()).put(nameBaseUri + "/api/state");
+				.body(new JsonObject().put("state", state).encodePrettily()).put(nameServiceUrl.toExternalForm() + "api/state");
 		response.then().assertThat().statusCode(200).body("state", equalTo(state));
-	}
-
-	/**
-	 * @param name
-	 * @param templatePath
-	 * @return the app route
-	 * @throws IOException
-	 */
-	private static String deployApp(String name, String templatePath) throws IOException {
-		String appName = "";
-		List<? extends HasMetadata> entities = OPENSHIFT.deploy(name, new File(templatePath));
-
-		Optional<String> first = entities.stream().filter(hm -> hm instanceof DeploymentConfig).map(hm -> (DeploymentConfig) hm)
-				.map(dc -> dc.getMetadata().getName()).findFirst();
-		if (first.isPresent()) {
-			appName = first.get();
-		} else {
-			throw new IllegalStateException("Application deployment config not found");
-		}
-		Route route = OPENSHIFT.client().routes().inNamespace(OPENSHIFT.project()).withName(appName).get();
-		assertThat(route).isNotNull();
-		return "http://" + route.getSpec().getHost();
 	}
 }
