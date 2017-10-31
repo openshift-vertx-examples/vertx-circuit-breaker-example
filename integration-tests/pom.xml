@@ -47,6 +47,38 @@
 							<profile>aggregate</profile>
 						</configuration>
 					</plugin>
+
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-image-streams</id>
+								<phase>pre-integration-test</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${project.build.directory}</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${project.parent.basedir}/name-service/target</directory>
+											<includes>
+												<include>*-is.yml</include>
+											</includes>
+										</resource>
+										<resource>
+											<directory>${project.parent.basedir}/greeting-service/target</directory>
+											<includes>
+												<include>*-is.yml</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-failsafe-plugin</artifactId>
