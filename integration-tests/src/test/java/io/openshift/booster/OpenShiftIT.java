@@ -18,6 +18,7 @@
 
 package io.openshift.booster;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.arquillian.cube.openshift.impl.enricher.RouteURL;
@@ -29,6 +30,7 @@ import java.util.concurrent.TimeUnit;
 import io.vertx.circuitbreaker.CircuitBreakerState;
 import io.vertx.core.json.JsonObject;
 
+import static com.jayway.restassured.RestAssured.get;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static com.jayway.awaitility.Awaitility.await;
 
@@ -55,6 +57,18 @@ public class OpenShiftIT {
 
 	@RouteURL(GREETING_SERVICE_APP)
 	private URL greetingServiceUrl;
+
+	@Before
+	public void setup() {
+		await().pollInterval(1, TimeUnit.SECONDS).atMost(5, TimeUnit.MINUTES).until(() -> {
+			try {
+				return get(greetingServiceUrl.toExternalForm() + "health").getStatusCode() == 200
+						&& get(nameServiceUrl.toExternalForm() + "health").getStatusCode() == 200;
+			} catch (Exception ignored) {
+				return false;
+			}
+		});
+	}
 
 	@Test
 	public void testThatCircuitBreakerIsClosedByDefault() throws InterruptedException {
