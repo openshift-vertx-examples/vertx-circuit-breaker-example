@@ -50,7 +50,7 @@ objects:
     output:
       to:
         kind: ImageStreamTag
-        name: name-service:9
+        name: name-service:10
     postCommit: {}
     resources: {}
     source:
@@ -92,7 +92,7 @@ objects:
       expose: "true"
       app: name-service
       provider: fabric8
-      version: "9"
+      version: "10"
       group: io.openshift.booster
     name: name-service
   spec:
@@ -111,11 +111,11 @@ objects:
     annotations:
       fabric8.io/iconUrl: img/icons/vertx.svg
       fabric8.io/git-branch: master
-      fabric8.io/metrics-path: dashboard/file/kubernetes-pods.json/?var-project=name-service&var-version=9
+      fabric8.io/metrics-path: dashboard/file/kubernetes-pods.json/?var-project=name-service&var-version=10
     labels:
       app: name-service
       provider: fabric8
-      version: "9"
+      version: "10"
       group: io.openshift.booster
     name: name-service
   spec:
@@ -134,11 +134,11 @@ objects:
         annotations:
           fabric8.io/iconUrl: img/icons/vertx.svg
           fabric8.io/git-branch: master
-          fabric8.io/metrics-path: dashboard/file/kubernetes-pods.json/?var-project=name-service&var-version=9
+          fabric8.io/metrics-path: dashboard/file/kubernetes-pods.json/?var-project=name-service&var-version=10
         labels:
           app: name-service
           provider: fabric8
-          version: "9"
+          version: "10"
           group: io.openshift.booster
       spec:
         containers:
@@ -147,7 +147,7 @@ objects:
             valueFrom:
               fieldRef:
                 fieldPath: metadata.namespace
-          image: name-service:9
+          image: name-service:10
           imagePullPolicy: IfNotPresent
           livenessProbe:
             httpGet:
@@ -182,7 +182,7 @@ objects:
         - vertx
         from:
           kind: ImageStreamTag
-          name: name-service:9
+          name: name-service:10
       type: ImageChange
 - apiVersion: v1
   kind: Route
@@ -190,7 +190,7 @@ objects:
     labels:
       app: name-service
       provider: fabric8
-      version: "9"
+      version: "10"
       group: io.openshift.booster
     name: name-service
   spec:
