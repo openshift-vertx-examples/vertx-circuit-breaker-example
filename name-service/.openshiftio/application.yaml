@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: launchpad-builder
+  name: launcher-builder
   annotations:
     description: This template creates a Build Configuration using an S2I builder.
     tags: instant-app
@@ -31,11 +31,15 @@ objects:
   kind: ImageStream
   metadata:
     name: name-service
+    labels:
+      booster: name-service
   spec: {}
 - apiVersion: v1
   kind: ImageStream
   metadata:
-    name: runtime
+    name: runtime-name-service
+    labels:
+      booster: name-service
   spec:
     tags:
     - name: latest
@@ -46,6 +50,8 @@ objects:
   kind: BuildConfig
   metadata:
     name: name-service
+    labels:
+      booster: name-service
   spec:
     output:
       to:
@@ -63,7 +69,7 @@ objects:
       sourceStrategy:
         from:
           kind: ImageStreamTag
-          name: runtime:latest
+          name: runtime-name-service:latest
         incremental: true
         env:
         - name: MAVEN_ARGS_APPEND
