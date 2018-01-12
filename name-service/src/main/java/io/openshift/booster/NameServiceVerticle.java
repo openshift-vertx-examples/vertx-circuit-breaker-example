@@ -20,7 +20,7 @@ public class NameServiceVerticle extends AbstractVerticle {
     private String state = "ok";
 
     @Override
-    public void start() throws Exception {
+    public void start() {
 
         Router router = Router.router(vertx);
 
@@ -55,6 +55,6 @@ public class NameServiceVerticle extends AbstractVerticle {
         });
         vertx.createHttpServer()
             .requestHandler(router::accept)
-            .listen(8080);
+            .listen(config().getInteger("http.port", 8080));
     }
 }

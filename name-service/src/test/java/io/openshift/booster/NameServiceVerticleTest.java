@@ -8,6 +8,7 @@ import static com.jayway.awaitility.Awaitility.setDefaultTimeout;
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
 
+import io.vertx.core.DeploymentOptions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,20 +20,18 @@ import io.restassured.RestAssured;
 import io.vertx.core.Vertx;
 import io.vertx.core.json.JsonObject;
 
-/**
- * @author <a href="http://escoffier.me">Clement Escoffier</a>
- */
 public class NameServiceVerticleTest {
 
-
+    private final static int PORT = 8081;
     private Vertx vertx;
 
     @Before
     public void setUp() {
         vertx = Vertx.vertx();
-        vertx.deployVerticle(NameServiceVerticle.class.getName());
+        vertx.deployVerticle(NameServiceVerticle.class.getName(),
+            new DeploymentOptions().setConfig(new JsonObject().put("http.port", PORT)));
 
-        RestAssured.baseURI = "http://localhost:8080";
+        RestAssured.baseURI = "http://localhost:" + PORT;
         setDefaultTimeout(1, TimeUnit.MINUTES);
 
         await().until(() -> {
