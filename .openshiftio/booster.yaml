@@ -2,6 +2,6 @@ name: Vert.x Circuit Breaker Booster
 description: Runs a Vert.x application using a circuit breaker
 versions:
   - id: community
-    name: 3.4.2.Final (Community)
+    name: 3.5.0.Final (Community)
   - id: redhat
     name: 3.4.2.redhat-006 (RHOAR)
