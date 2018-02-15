@@ -23,16 +23,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.arquillian.cube.openshift.impl.enricher.RouteURL;
 import org.jboss.arquillian.junit.Arquillian;
-import com.jayway.restassured.RestAssured;
-import com.jayway.restassured.response.Response;
+import io.restassured.RestAssured;
+import io.restassured.response.Response;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 import io.vertx.circuitbreaker.CircuitBreakerState;
 import io.vertx.core.json.JsonObject;
 
-import static com.jayway.restassured.RestAssured.get;
+import static io.restassured.RestAssured.get;
 import static org.hamcrest.core.IsEqual.equalTo;
-import static com.jayway.awaitility.Awaitility.await;
+import static org.awaitility.Awaitility.await;
 
 /**
  * @author Martin Kouba
