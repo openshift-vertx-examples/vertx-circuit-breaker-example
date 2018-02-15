@@ -11,10 +11,10 @@ import org.junit.Test;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.jayway.awaitility.Awaitility.await;
-import static com.jayway.awaitility.Awaitility.setDefaultTimeout;
 import static io.restassured.RestAssured.get;
 import static io.restassured.RestAssured.given;
+import static org.awaitility.Awaitility.await;
+import static org.awaitility.Awaitility.setDefaultTimeout;
 import static org.hamcrest.Matchers.is;
 
 public class NameServiceVerticleTest {
