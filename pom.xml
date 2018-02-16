@@ -98,6 +98,13 @@
       <artifactId>arquillian-cube-requirement</artifactId>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>io.fabric8</groupId>
+      <artifactId>openshift-client</artifactId>
+      <version>1.4.34</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   
 </project>
