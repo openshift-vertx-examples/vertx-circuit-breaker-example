@@ -1,10 +1,29 @@
+<!--
+  ~
+  ~  Copyright 2016-2018 Red Hat, Inc, and individual contributors.
+  ~
+  ~  Licensed under the Apache License, Version 2.0 (the "License");
+  ~  you may not use this file except in compliance with the License.
+  ~  You may obtain a copy of the License at
+  ~
+  ~  http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~  Unless required by applicable law or agreed to in writing, software
+  ~  distributed under the License is distributed on an "AS IS" BASIS,
+  ~  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~  See the License for the specific language governing permissions and
+  ~  limitations under the License.
+  ~
+  -->
 <html>
 
 <head>
     <meta charset="utf-8">
-    <title>Vert.x Circuit Breaker Booster</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <title>Circuit Breaker Mission - Vert.x</title>
+    <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
 </head>
 
 <body>
@@ -20,50 +39,57 @@
             mechanism over the failed or unavailable service to service communication, which can quickly and easily determine that the services
             are not functioning properly, hence can either return a default result or fail quickly and gracefully with enough information about
             the current failure. This mechanism is called circuit breaker.
-            <br/>
+        </p>
+        <p>
             On this page you can invoke the <code>greeting service</code>. This service uses a <code>name
             service</code>. The invocations are protected by a circuit breaker. You can configure the state of the
             <code>name service</code> using the <code>toggle</code> button.
         </p>
 
+        <div class="row">
+
+            <div class="col-md-6">
+                <h2>Greeting service</h2>
+                <div id="circuit-state"></div>
+                <button id="invoke" type="submit" class="btn btn-primary">Invoke</button>
+                <h3>Results:</h3>
+                    <form class="form-inline">
+                        <button id="clear" type="submit" class="btn btn-success">Clear</button>
+                    </form>
+                <pre style="min-height:20em;"><code id="greeting-result"></code></pre>
+            </div>
+
+            <div class="col-md-6">
+                <h2>Name service</h2>
+                <div id="name-state"></div>
+                <form class="form-inline">
+                    <button id="toggle" type="submit" class="btn btn-primary">Toggle</button>
+                </form>
+            </div>
+
+        </div>
+
     </div>
 
-    <div class="row">
-        <div class="col-md-6">
-            <h2>Invoke the greeting service:</h2>
-            <button id="invoke" type="submit" class="btn btn-success">Invoke</button>
-        </div>
-        <div class="col-md-6">
-            <h2>Result:</h2>
-            <pre><code id="greeting-result">Invoke the service to see the result.</code></pre>
-        </div>
-    </div>
+    <script
+            src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <script
+            src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+    <script src="libs/sockjs.min.js"></script>
+    <script src='libs/vertx-eventbus.js'></script>        
 
-    <div class="row">
-        <div class="col-md-6">
-            <h2>Name service state:</h2>
-            <p id="name-state"></p>
-            <button id="toggle" type="submit" class="btn btn-primary">Toggle</button>
-        </div>
-        <div class="col-md-6">
-            <h2>Circuit breaker state</h2>
-            <p id="circuit-state"></p>
-        </div>
-    </div>
-</div>
+    <script>
+    
+    $("#clear").click(function(e) {
+        $("#greeting-result").html("");
+        e.preventDefault();
+    });
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
-        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
-        crossorigin="anonymous"></script>
-
-<script src="libs/sockjs.min.js"></script>
-<script src='libs/vertx-eventbus.js'></script>
-
-<script>
     function invokeService() {
         $.getJSON("/api/greeting", function (res) {
-            $("#greeting-result").html(JSON.stringify(res));
+            $("#greeting-result").prepend(JSON.stringify(res) + "\n");
         });
     }
 
@@ -84,25 +110,33 @@
         });
 
         $.getJSON("", function (res) {
-            $("#greeting-result").html(JSON.stringify(res));
+            $("#greeting-result").prepend(JSON.stringify(res)+"\n");
+        });
+    }
+
+    function initCircuitState() {
+        $.getJSON("/api/cb-state", function(res) {
+            updateCircuitBreakerState(res.state);
         });
     }
 
     function updateNameServiceState(state) {
         if (state === "ok") {
-            $("#name-state").html("<h4><span id='svc-state' class='label label-success'>working state</span></h4>");
+            $("#name-state").html("<h3>Operational state: <span id=\"svc-state\" class=\"label label-info\">OK</span></h3>");
+        } else if (state === "fail") {
+            $("#name-state").html("<h3>Operational state: <span id=\"svc-state\" class=\"label label-warning\">FAIL</span></h3>");
         } else {
-            $("#name-state").html("<h4><span id='svc-state' class='label label-warning'>failure state</span></h4>");
+            $("#name-requests").prepend(state + "\n");
         }
     }
 
     function updateCircuitBreakerState(state) {
         if (state === "OPEN") {
-            $("#circuit-state").html("<h4><span id='svc-state' class='label label-danger'>OPEN</span></h4>");
+            $("#circuit-state").html("<h3>Circuit breaker state: <span class=\"label label-warning\">OPEN</span></h3>");
         } else if (state == "CLOSED") {
-            $("#circuit-state").html("<h4><span id='svc-state' class='label label-success'>CLOSED</span></h4>");
+            $("#circuit-state").html("<h3>Circuit breaker state: <span class=\"label label-info\">CLOSED</span></h3>");
         } else {
-            $("#circuit-state").html("<h4><span id='svc-state' class='label label-warning'>HALF OPEN</span></h4>");
+            $("#circuit-state").html("<h3>Circuit breaker state: <span class=\"label label-danger\">HALF OPEN</span></h3>");
         }
     }
 
@@ -110,7 +144,7 @@
     function toggleNameServiceState() {
         var url = window.location.origin.replace("greeting-service", "name-service") + "/api/state";
         var newState = "ok";
-        if ($("#svc-state").hasClass("label-success")) {
+        if ($("#svc-state").hasClass("label-info")) {
             newState = "fail";
         }
         $.ajax({
@@ -132,7 +166,7 @@
             $("#greeting-result").html(JSON.stringify(res));
         });
     }
-    
+
     $(document).ready(function () {
         $("#invoke").click(function (e) {
             invokeService();
@@ -145,13 +179,14 @@
         });
 
         initNameServiceState();
-
+        initCircuitState();
         var eb = new EventBus('/eventbus');
         eb.onopen = function () {
             console.log("Event bus opened");
             eb.registerHandler('circuit-breaker', function (error,  msg) {
                 var state = msg.body.state;
                 updateCircuitBreakerState(state);
+                
             });
         };
 
@@ -159,7 +194,6 @@
 
     var foo;
 </script>
-
 </body>
 
 </html>
