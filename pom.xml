@@ -7,7 +7,7 @@
   <parent>
     <groupId>io.openshift</groupId>
     <artifactId>booster-parent</artifactId>
-    <version>20</version>
+    <version>21</version>
   </parent>
 
   <groupId>io.openshift.booster</groupId>
@@ -75,34 +75,15 @@
     </dependency>
 
     <dependency>
-      <groupId>org.jboss.arquillian.junit</groupId>
-      <artifactId>arquillian-junit-container</artifactId>
-      <version>1.1.12.Final</version>
-      <scope>test</scope>
-    </dependency>
-
-    <dependency>
       <groupId>org.arquillian.cube</groupId>
-      <artifactId>arquillian-cube-openshift</artifactId>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>undertow-core</artifactId>
-          <groupId>io.undertow</groupId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>org.arquillian.cube</groupId>
-      <artifactId>arquillian-cube-requirement</artifactId>
+      <artifactId>arquillian-cube-openshift-starter</artifactId>
       <scope>test</scope>
     </dependency>
 
     <dependency>
       <groupId>io.fabric8</groupId>
       <artifactId>openshift-client</artifactId>
-      <version>1.4.34</version>
+      <version>3.1.10</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
