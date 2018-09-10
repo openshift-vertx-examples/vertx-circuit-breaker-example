@@ -83,7 +83,7 @@
     <dependency>
       <groupId>io.fabric8</groupId>
       <artifactId>openshift-client</artifactId>
-      <version>4.0.4</version>
+      <version>4.0.5</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
