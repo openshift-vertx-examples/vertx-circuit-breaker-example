@@ -46,5 +46,5 @@ waitForPodReadiness "name-service" 1
 waitForPodState "greeting-service" "Running"
 waitForPodReadiness "greeting-service" 1
 
-cd integration-tests; mvn verify -Popenshift-it -Denv.init.enabled=false;
+mvn clean install -DskipTests; cd integration-tests; mvn verify -Popenshift-it -Denv.init.enabled=false;
 cd .. || exit
