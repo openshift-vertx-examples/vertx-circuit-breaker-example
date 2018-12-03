@@ -110,6 +110,7 @@ public class OpenShiftIT {
 	}
 
 	private void assertGreeting(String expected) {
+		greetingResponse(); // Because it maybe very slow, it's good to do a warm up.
 		Response response = greetingResponse();
 		response.then().statusCode(200).body("content", equalTo(expected));
 	}
