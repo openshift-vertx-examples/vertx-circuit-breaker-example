@@ -108,3 +108,5 @@ dist/
 nbdist/
 nbactions.xml
 .nb-gradle/
+
+.vscode
