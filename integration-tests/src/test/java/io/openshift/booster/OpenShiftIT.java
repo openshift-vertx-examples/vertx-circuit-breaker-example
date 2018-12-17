@@ -116,6 +116,7 @@ public class OpenShiftIT {
 	}
 
 	private boolean testGreeting(String expected) {
+		greetingResponse(); // Because it maybe very slow, it's good to do a warm up.
 		Response response = greetingResponse();
 		response.then().statusCode(200);
 		return response.getBody().jsonPath().getString("content").equals(expected);
