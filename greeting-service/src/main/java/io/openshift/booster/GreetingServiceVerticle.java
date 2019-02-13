@@ -5,7 +5,7 @@ import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.WebClientOptions;
 import io.vertx.ext.web.handler.sockjs.BridgeOptions;
-import io.vertx.ext.web.handler.sockjs.PermittedOptions;
+import io.vertx.ext.bridge.PermittedOptions;
 import io.vertx.rxjava.circuitbreaker.CircuitBreaker;
 import io.vertx.rxjava.circuitbreaker.HystrixMetricHandler;
 import io.vertx.rxjava.core.AbstractVerticle;
@@ -57,7 +57,7 @@ public class GreetingServiceVerticle extends AbstractVerticle {
         router.get("/*").handler(StaticHandler.create());
 
         vertx.createHttpServer()
-            .requestHandler(router::accept)
+            .requestHandler(router)
             .listen(8080);
     }
 
