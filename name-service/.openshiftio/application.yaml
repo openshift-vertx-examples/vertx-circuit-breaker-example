@@ -33,7 +33,7 @@ objects:
   metadata:
     name: name-service
     labels:
-      booster: name-service
+      example: name-service
   spec: {}
 
 - apiVersion: v1
@@ -41,7 +41,7 @@ objects:
   metadata:
     name: runtime-name-service
     labels:
-      booster: name-service
+      example: name-service
   spec:
     tags:
     - name: latest
@@ -54,7 +54,7 @@ objects:
   metadata:
     name: name-service
     labels:
-      booster: name-service
+      example: name-service
   spec:
     output:
       to:
@@ -94,7 +94,7 @@ objects:
       prometheus.io/port: "9779"
     labels:
       app: name-service
-      group: io.openshift.booster
+      group: io.openshift.example
     name: name-service
   spec:
     ports:
@@ -104,25 +104,25 @@ objects:
       targetPort: 8080
     selector:
       app: name-service
-      group: io.openshift.booster
+      group: io.openshift.example
 
 - apiVersion: apps.openshift.io/v1
   kind: DeploymentConfig
   metadata:
     labels:
       app: name-service
-      group: io.openshift.booster
+      group: io.openshift.example
     name: name-service
   spec:
     replicas: 1
     selector:
       app: name-service
-      group: io.openshift.booster
+      group: io.openshift.example
     template:
       metadata:
         labels:
           app: name-service
-          group: io.openshift.booster
+          group: io.openshift.example
       spec:
         containers:
         - env:
@@ -171,7 +171,7 @@ objects:
   metadata:
     labels:
       app: name-service
-      group: io.openshift.booster
+      group: io.openshift.example
     name: name-service
   spec:
     port:

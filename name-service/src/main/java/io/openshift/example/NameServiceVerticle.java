@@ -1,4 +1,4 @@
-package io.openshift.booster;
+package io.openshift.example;
 
 import static io.netty.handler.codec.http.HttpHeaderValues.APPLICATION_JSON;
 import static io.vertx.core.http.HttpHeaders.CONTENT_TYPE;

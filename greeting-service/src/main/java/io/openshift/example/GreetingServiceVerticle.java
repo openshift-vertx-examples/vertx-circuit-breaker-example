@@ -1,4 +1,4 @@
-package io.openshift.booster;
+package io.openshift.example;
 
 import io.vertx.circuitbreaker.CircuitBreakerOptions;
 import io.vertx.core.Handler;

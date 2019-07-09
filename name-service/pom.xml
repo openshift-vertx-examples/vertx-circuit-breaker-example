@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.openshift.booster</groupId>
+    <groupId>io.openshift.example</groupId>
     <artifactId>circuit-breaker-vertx</artifactId>
     <version>24-SNAPSHOT</version>
   </parent>
@@ -17,7 +17,7 @@
   <description>Exposes a name service over HTTP with a failure toggle</description>
 
   <properties>
-    <vertx.verticle>io.openshift.booster.NameServiceVerticle</vertx.verticle>
+    <vertx.verticle>io.openshift.example.NameServiceVerticle</vertx.verticle>
     <docker.skip>false</docker.skip>
   </properties>
 

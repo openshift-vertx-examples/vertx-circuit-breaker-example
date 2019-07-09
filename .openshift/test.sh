@@ -9,12 +9,12 @@ fi
 source .openshift/openshift.sh
 
 if [ -z "$1" ]; then
-  ORG="openshift-vertx-boosters"
+  ORG="openshift-vertx-examples"
 else
   ORG=$1
 fi
 
-REPO="https://github.com/$ORG/vertx-circuit-breaker-booster"
+REPO="https://github.com/$ORG/vertx-circuit-breaker-example"
 echo -e "\n${YELLOW}Using source repository: $REPO ...\n${NC}"
 
 # cleanup

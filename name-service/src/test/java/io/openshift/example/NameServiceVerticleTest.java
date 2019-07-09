@@ -1,4 +1,4 @@
-package io.openshift.booster;
+package io.openshift.example;
 
 import io.restassured.RestAssured;
 import io.vertx.core.DeploymentOptions;

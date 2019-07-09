@@ -5,7 +5,7 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>io.openshift.booster</groupId>
+		<groupId>io.openshift.example</groupId>
 		<artifactId>circuit-breaker-vertx</artifactId>
 		<version>24-SNAPSHOT</version>
 	</parent>
@@ -16,12 +16,12 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>io.openshift.booster</groupId>
+			<groupId>io.openshift.example</groupId>
 			<artifactId>name-service</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>
-			<groupId>io.openshift.booster</groupId>
+			<groupId>io.openshift.example</groupId>
 			<artifactId>greeting-service</artifactId>
 			<version>${project.version}</version>
 		</dependency>
