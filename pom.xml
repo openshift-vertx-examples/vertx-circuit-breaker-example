@@ -3,7 +3,7 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>io.openshift.booster</groupId>
+  <groupId>io.openshift.example</groupId>
   <artifactId>circuit-breaker-vertx</artifactId>
   <version>25-SNAPSHOT</version>
   <name>106 - Circuit Breaker Mission with Vert.x</name>
@@ -11,7 +11,7 @@
 
   <properties>
     <vertx.version>3.7.1</vertx.version>
-    <vertx-maven-plugin.version>1.0.18</vertx-maven-plugin.version>
+    <vertx-maven-plugin.version>1.0.20</vertx-maven-plugin.version>
     <!--Skips execution of FMP for this project and all children projects, which does not override this variable-->
     <docker.skip>true</docker.skip>
 

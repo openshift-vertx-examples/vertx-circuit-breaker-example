@@ -409,7 +409,7 @@
             </licenses>
         </dependency>
         <dependency>
-            <groupId>io.openshift.booster</groupId>
+            <groupId>io.openshift.example</groupId>
             <artifactId>greeting-service</artifactId>
             <version>17-SNAPSHOT</version>
             <licenses>
@@ -420,7 +420,7 @@
             </licenses>
         </dependency>
         <dependency>
-            <groupId>io.openshift.booster</groupId>
+            <groupId>io.openshift.example</groupId>
             <artifactId>name-service</artifactId>
             <version>17-SNAPSHOT</version>
             <licenses>

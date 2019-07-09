@@ -5,7 +5,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>io.openshift.booster</groupId>
+    <groupId>io.openshift.example</groupId>
     <artifactId>circuit-breaker-vertx</artifactId>
     <version>25-SNAPSHOT</version>
   </parent>
@@ -20,7 +20,7 @@
     a circuit breaker</description>
 
   <properties>
-    <vertx.verticle>io.openshift.booster.GreetingServiceVerticle</vertx.verticle>
+    <vertx.verticle>io.openshift.example.GreetingServiceVerticle</vertx.verticle>
     <docker.skip>false</docker.skip>
   </properties>
 

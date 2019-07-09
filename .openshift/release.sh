@@ -6,8 +6,8 @@ NC='\033[0m' # No Color
 YELLOW='\033[0;33m'
 BLUE='\033[0;34m'
 
-if [ ! -d ".openshiftio" ]; then
-  echo -e "${RED} The script expects the .openshiftio directory to exist ${NC}"
+if [ ! -d ".openshift" ]; then
+  echo -e "${RED} The script expects the .openshift directory to exist ${NC}"
   exit 1
 fi
 
@@ -59,8 +59,8 @@ mvn versions:set -DnewVersion=${NEW_VERSION} ${PROFILE} > bump-version.log
 echo -e "${BLUE}Issuing a verification build${NC}"
 mvn clean install ${PROFILE} > verification.log
 
-if [ -d "integration-tests/.openshiftio" ]; then 
-    rm -Rf "integration-tests/.openshiftio"
+if [ -d "integration-tests/.openshift" ]; then 
+    rm -Rf "integration-tests/.openshift"
 fi
 
 echo -e "${BLUE}Committing changes${NC}"
@@ -76,8 +76,8 @@ mvn versions:set -DnewVersion=${NEXT_VERSION} ${PROFILE} > bump-version-dev.log
 
 mvn clean install -DskipTests ${PROFILE} > fast-build.log
 
-if [ -d "integration-tests/.openshiftio" ]; then 
-    rm -Rf "integration-tests/.openshiftio"
+if [ -d "integration-tests/.openshift" ]; then 
+    rm -Rf "integration-tests/.openshift"
 fi
 
 echo -e "${BLUE}Committing changes${NC}"
