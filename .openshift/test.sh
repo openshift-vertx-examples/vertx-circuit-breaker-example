@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
 set -e
 
-if [ ! -d ".openshiftio" ]; then
-  warning "The script expects the .openshiftio directory to exist"
+if [ ! -d ".openshift" ]; then
+  warning "The script expects the .openshift directory to exist"
   exit 1
 fi
 
-source .openshiftio/openshift.sh
+source .openshift/openshift.sh
 
 if [ -z "$1" ]; then
-  ORG="openshiftio-vertx-boosters"
+  ORG="openshift-vertx-boosters"
 else
   ORG=$1
 fi
@@ -37,8 +37,8 @@ oc delete routes --all
 oc delete template --all
 
 # Deploy the templates and required resources
-oc apply -f name-service/.openshiftio/application.yaml
-oc apply -f greeting-service/.openshiftio/application.yaml
+oc apply -f name-service/.openshift/application.yaml
+oc apply -f greeting-service/.openshift/application.yaml
 
 # Create the application
 oc new-app --template=vertx-greeting-service \
