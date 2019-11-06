@@ -44,7 +44,7 @@ public class GreetingServiceVerticle extends AbstractVerticle {
         Router router = Router.router(vertx);
 
         router.get("/health").handler(rc -> rc.response().end("OK"));
-        router.get("/eventbus/*").handler(getSockJsHandler());
+        router.mountSubRouter("/eventbus", getSockJsHandler());
         // The address is the circuit breaker notification address configured above.
         router.get("/metrics").handler(HystrixMetricHandler.create(vertx, "circuit-breaker"));
 
@@ -89,7 +89,7 @@ public class GreetingServiceVerticle extends AbstractVerticle {
             );
     }
 
-    private Handler<RoutingContext> getSockJsHandler() {
+    private Router getSockJsHandler() {
         SockJSHandler sockJSHandler = SockJSHandler.create(vertx);
         BridgeOptions options = new BridgeOptions();
         options.addInboundPermitted(
