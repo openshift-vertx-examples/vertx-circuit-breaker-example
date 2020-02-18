@@ -1,7 +1,6 @@
 package io.openshift.example;
 
 import io.vertx.circuitbreaker.CircuitBreakerOptions;
-import io.vertx.core.Handler;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.WebClientOptions;
 import io.vertx.ext.web.handler.sockjs.BridgeOptions;
@@ -62,7 +61,7 @@ public class GreetingServiceVerticle extends AbstractVerticle {
     }
 
     private void greeting(RoutingContext rc) {
-        circuit.rxExecuteCommandWithFallback(
+        circuit.rxExecuteWithFallback(
             future ->
                 client.get("/api/name").rxSend()
                     .doOnEach(r -> System.out.println(r.getValue().bodyAsString()))
