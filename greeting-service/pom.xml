@@ -85,7 +85,9 @@
                 <goals>
                   <goal>resource</goal>
                   <goal>build</goal>
+                  <goal>apply</goal>
                 </goals>
+                <phase>package</phase>
               </execution>
             </executions>
             <configuration>
@@ -94,11 +96,49 @@
                   <exclude>f8-maven-scm</exclude>
                 </excludes>
                 <config>
-                  <vertx-health-check>
+                  <f8-healthcheck-vertx>
                     <path>/health</path>
-                  </vertx-health-check>
+                  </f8-healthcheck-vertx>
                 </config>
               </enricher>
+              <resources>
+                <labels>
+                  <all>
+                    <property>
+                      <name>app.kubernetes.io/part-of</name>
+                      <value>circuit-breaker-example</value>
+                    </property>
+                    <property>
+                      <name>app.kubernetes.io/name</name>
+                      <value>greeting-service</value>
+                    </property>
+                    <property>
+                      <name>app.kubernetes.io/component</name>
+                      <value>frontend</value>
+                    </property>
+                    <property>
+                      <name>app.openshift.io/runtime</name>
+                      <value>vertx</value>
+                    </property>
+                    <property>
+                      <name>app.openshift.io/runtime-version</name>
+                      <value>${vertx.version}</value>
+                    </property>
+                  </all>
+                </labels>
+                <annotations>
+                  <all>
+                    <property>
+                      <name>app.openshift.io/vcs-uri</name>
+                      <value>${git.remote.origin.url}</value>
+                    </property>
+                    <property>
+                      <name>app.openshift.io/connects-to</name>
+                      <value>name-service</value>
+                    </property>
+                  </all>
+                </annotations>
+              </resources>
             </configuration>
           </plugin>
         </plugins>
