@@ -119,11 +119,11 @@
                       <value>backend</value>
                     </property>
                     <property>
-                      <name>app.kubernetes.io/runtime</name>
+                      <name>app.openshift.io/runtime</name>
                       <value>vertx</value>
                     </property>
                     <property>
-                      <name>app.kubernetes.io/runtime-version</name>
+                      <name>app.openshift.io/runtime-version</name>
                       <value>${vertx.version}</value>
                     </property>
                   </all>
@@ -131,7 +131,7 @@
                 <annotations>
                   <all>
                     <property>
-                      <name>app.kubernetes.io/vcs-uri</name>
+                      <name>app.openshift.io/vcs-uri</name>
                       <value>${git.remote.origin.url}</value>
                     </property>
                   </all>
