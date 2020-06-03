@@ -5,12 +5,12 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.openshift.example</groupId>
   <artifactId>circuit-breaker-vertx</artifactId>
-  <version>29-SNAPSHOT</version>
+  <version>30-SNAPSHOT</version>
   <name>106 - Circuit Breaker Mission with Vert.x</name>
   <packaging>pom</packaging>
 
   <properties>
-    <vertx.version>3.9.0</vertx.version>
+    <vertx.version>3.9.1</vertx.version>
     <vertx-maven-plugin.version>1.0.22</vertx-maven-plugin.version>
     <!--Skips execution of FMP for this project and all children projects, which does not override this variable-->
     <docker.skip>true</docker.skip>
@@ -71,7 +71,7 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.15.0</version>
+      <version>3.16.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -90,7 +90,7 @@
     <dependency>
       <groupId>io.fabric8</groupId>
       <artifactId>openshift-client</artifactId>
-      <version>4.9.0</version>
+      <version>4.10.2</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
