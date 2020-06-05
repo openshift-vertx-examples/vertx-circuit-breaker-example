@@ -69,6 +69,7 @@
           <includeOnlyProperties>
             <includeOnlyProperty>^git.remote.origin.url$</includeOnlyProperty>
           </includeOnlyProperties>
+          <failOnNoGitDirectory>false</failOnNoGitDirectory>
         </configuration>
       </plugin>
     </plugins>
