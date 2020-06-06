@@ -3,7 +3,7 @@ package io.openshift.example;
 import io.vertx.circuitbreaker.CircuitBreakerOptions;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.client.WebClientOptions;
-import io.vertx.ext.web.handler.sockjs.BridgeOptions;
+import io.vertx.ext.web.handler.sockjs.SockJSBridgeOptions;
 import io.vertx.ext.bridge.PermittedOptions;
 import io.vertx.rxjava.circuitbreaker.CircuitBreaker;
 import io.vertx.rxjava.circuitbreaker.HystrixMetricHandler;
@@ -90,7 +90,7 @@ public class GreetingServiceVerticle extends AbstractVerticle {
 
     private Router getSockJsHandler() {
         SockJSHandler sockJSHandler = SockJSHandler.create(vertx);
-        BridgeOptions options = new BridgeOptions();
+        SockJSBridgeOptions options = new SockJSBridgeOptions();
         options.addInboundPermitted(
             new PermittedOptions().setAddress("circuit-breaker"));
         options.addOutboundPermitted(
