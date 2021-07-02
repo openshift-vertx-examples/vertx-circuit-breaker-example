@@ -10,7 +10,7 @@
   <packaging>pom</packaging>
 
   <properties>
-    <vertx.version>3.9.1</vertx.version>
+    <vertx.version>4.1.1</vertx.version>
     <vertx-maven-plugin.version>1.0.22</vertx-maven-plugin.version>
     <!--Skips execution of FMP for this project and all children projects, which does not override this variable-->
     <docker.skip>true</docker.skip>
